@@ -52,6 +52,9 @@ public class NewAPIWordCount {
 			int sum = 0;
 			for (IntWritable value : values) {
 				sum += value.get();
+				 // You can uncomment below line also. Multiple output can provide by reducer for the given key as long as same 
+				// type output key value
+				//context.write(key, new IntWritable(sum));
 			}
 			context.write(key, new IntWritable(sum));
 		}
@@ -65,10 +68,11 @@ public class NewAPIWordCount {
 	public static void main(String[] args) throws IOException, InterruptedException, ClassNotFoundException {
 		// Hadoop client will kick this job to trigger in cluster
 		Job job = Job.getInstance();
-		job.setJobName("wordCount");
 		
-		// Set the className to run on the job
+		// Set the className to run. Below line is input to distributed cluster to run java class. 
+		// If its missing then in distribution runtimeException you will get classNotfoundException after job kickoff
 		job.setJarByClass(NewAPIWordCount.class);
+		job.setJobName("wordCount");
 		
 		// Output of the reducer key class and value
 		job.setOutputKeyClass(Text.class);
@@ -96,7 +100,8 @@ public class NewAPIWordCount {
 		FileOutputFormat.setOutputPath(job, new Path(args[1]));
 		
 		// Submit the job, then poll for progress until the job is complete
-		job.waitForCompletion(true);
+		// If waitforCompletion(false) still job submit to hadoop and completes only it won't wait and prompt you the result. hadoop takes input and completes
+		System.exit(job.waitForCompletion(true) ? 0 : 1);
 		
 	}
 }
