@@ -1,4 +1,4 @@
-/**
+ /**
  * 
  */
 package com.gubs.MRNewJavaAPIExamples;
@@ -63,6 +63,10 @@ public class WordCountToolRunner extends Configured implements Tool{
 	}
 	
 	public static void main(String[] args) throws Exception {
+		if (args == null || args.length < 2) {
+			System.err.println("WordCountToolRunner should have 2 inputs : <inputDir|InputFile> <outPutDir>");
+			System.exit(0);
+		}
 		int exitCode = ToolRunner.run(new Configuration(), new WordCountToolRunner(), args);
 		System.exit(exitCode);
 	}

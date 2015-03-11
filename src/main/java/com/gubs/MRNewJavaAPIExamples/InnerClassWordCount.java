@@ -27,7 +27,7 @@ import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
  * http://wiki.apache.org/hadoop/WordCount
  * 
  */
-public class NewAPIWordCount {
+public class InnerClassWordCount {
 
 	// KeyInput takes position of the input and the line as value (Text), Map writes output key Text and value IntWritable
 	public static class Map extends Mapper<LongWritable, Text, Text, IntWritable> {
@@ -71,7 +71,7 @@ public class NewAPIWordCount {
 		
 		// Set the className to run. Below line is input to distributed cluster to run java class. 
 		// If its missing then in distribution runtimeException you will get classNotfoundException after job kickoff
-		job.setJarByClass(NewAPIWordCount.class);
+		job.setJarByClass(InnerClassWordCount.class);
 		job.setJobName("wordCount");
 		
 		// Output of the reducer key class and value

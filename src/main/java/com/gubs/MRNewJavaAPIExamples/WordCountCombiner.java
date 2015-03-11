@@ -24,6 +24,11 @@ public class WordCountCombiner extends Reducer<Text, IntWritable, Text, IntWrita
 		int sum = 0;
 		for (IntWritable value : values) {
 			sum += value.get();
+			// If you use below line instead of above line then you no need combiner. For 2 reasons
+			// 1. Not necessary combiner. Because combiner value is not considered below. So, unwanted combiner
+			// 2. Since, combiner already added / combined for the given map, since you missed taking the value the output also goes wrong.
+			// You can do by having 2 files 1.txt 2.txt and have "you" in both and in 1.txt file have "you" twice. You know the difference output
+			//	sum += 1;
 		}
 		context.write(key, new IntWritable(sum));
 	}
