@@ -21,6 +21,9 @@ import org.apache.hadoop.util.ToolRunner;
  * Default of the keyValue is tab delimiter
  * 
  *  Execute : hadoop jar HadoopMRExamples.jar com.gubs.MRNewJavaAPIExamples.DefaultDriver smallfiles out19
+ *  
+ *  https://chasebradford.wordpress.com/2011/02/05/distributed-cache-static-objects-and-fast-setup/
+ *  
  */
 public class DefaultDriver extends Configured implements Tool {
 	
@@ -34,6 +37,8 @@ public class DefaultDriver extends Configured implements Tool {
 		FileInputFormat.addInputPath(job, new Path(args[0]));
 		FileOutputFormat.setOutputPath(job, new Path(args[1]));
 		
+		// Default it will write the output in reducer with line offset sorted and line values
+		
 		// Default values are below if you don't pass
 /*		job.setMapperClass(Mapper.class);
 		job.setReducerClass(Reducer.class);
@@ -42,6 +47,9 @@ public class DefaultDriver extends Configured implements Tool {
 		
 		job.setNumReduceTasks(1);
 		job.setPartitionerClass(HashPartitioner.class);*/
+		
+		// If you enable below line then in reducer output hdfs 3 files will be there for 3 reducer task
+		// job.setNumReduceTasks(3);
 		
 		return (job.waitForCompletion(true) ? 0 : 1);
 	}

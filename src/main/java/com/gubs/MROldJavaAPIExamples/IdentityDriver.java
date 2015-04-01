@@ -14,6 +14,7 @@ import org.apache.hadoop.mapred.FileOutputFormat;
 import org.apache.hadoop.mapred.JobClient;
 import org.apache.hadoop.mapred.JobConf;
 import org.apache.hadoop.mapred.KeyValueTextInputFormat;
+import org.apache.hadoop.mapred.MapFileOutputFormat;
 import org.apache.hadoop.mapred.lib.IdentityMapper;
 import org.apache.hadoop.mapred.lib.IdentityReducer;
 import org.apache.hadoop.util.StringUtils;
@@ -36,7 +37,6 @@ public class IdentityDriver extends Configured implements Tool{
 
 	@Override
 	public int run(String[] args) throws Exception {
-		// I like the below code from author grepalex.com
 		String csvInputs = StringUtils.join(",", Arrays.copyOfRange(args, 0, args.length - 1)); 
 		Path outputDir = new Path(args[args.length - 1]);
 		
@@ -49,8 +49,13 @@ public class IdentityDriver extends Configured implements Tool{
 		FileOutputFormat.setOutputPath(jobConf, outputDir);
 		
 		jobConf.setInputFormat(KeyValueTextInputFormat.class);
-		
+
+		// Default mapper
 		jobConf.setMapperClass(IdentityMapper.class);
+		
+		// pass 0 reducer if you want to avoid reducer and print the map result without sort / shuffle
+		// IdentityReducer can be used if you want to sort / shuffle the map output and no aggregation required
+		// Also, if there are too many mapper output files then if you need output file based on No. of reducers you can use		
 		jobConf.setReducerClass(IdentityReducer.class);
 		
 		jobConf.setMapOutputKeyClass(Text.class);
